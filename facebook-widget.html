@@ -1,0 +1,56 @@
+<!-- @author Frank Egan -->
+<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
+
+<!--
+`facebook-widget`
+A facebook widget for the Venice Dashboard
+
+@demo demo/index.html 
+-->
+
+<dom-module id="facebook-widget">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <!-- Iron Ajax call to Facebook Graph API -->
+    <!-- <iron-ajax
+      auto
+      url="https://graph.facebook.com/v2.8/{{pageId}}/feed"
+      params='{"access_token":"103880376768441|ROA48OtPc62AuB3j-1NbqZwrKEo"}'
+      handle-as="json"
+      last-response={{response}}></iron-ajax> -->
+    <!-- Uploaded Photos -->
+    <iron-ajax
+      auto
+      url="https://graph.facebook.com/v2.8/{{pageId}}/photos"
+      params='{"access_token":"103880376768441|ROA48OtPc62AuB3j-1NbqZwrKEo", "fields":"source", "type":"uploaded"}'
+      handle-as="json"
+      last-response={{response}}></iron-ajax>
+
+    <!-- DOM Repeat -->
+    <template is="dom-repeat" items={{response.data}}>
+      <div>
+        {{item.message}}
+        <img style="min-width: 10vw; max-height: 10vw;" src="{{item.source}}">
+        </p>
+      </div>
+    </template>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'facebook-widget',
+      properties: {
+        pageId: {
+          type: Number,
+          value:585431778198966
+        }
+      }
+    });
+  </script>
+</dom-module>
