@@ -1,6 +1,7 @@
 <!-- @author Frank Egan -->
 <link rel="import" href="/bower_components/polymer/polymer.html">
 <link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="/bower_components/paper-card/paper-card.html">
 
 <!--
 `facebook-widget`
@@ -15,27 +16,38 @@ A facebook widget for the Venice Dashboard
       :host {
         display: block;
       }
+      img {
+        min-width: 96px;
+        width: 10vw;
+        min-height: 96px;
+        max-height: 10vw; 
+        float: left; 
+        padding: 1vw;
+      }
+      .message {
+        display: block;
+        height: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     </style>
     <!-- Iron Ajax call to Facebook Graph API -->
-    <!-- <iron-ajax
-      auto
-      url="https://graph.facebook.com/v2.8/{{pageId}}/feed"
-      params='{"access_token":"103880376768441|ROA48OtPc62AuB3j-1NbqZwrKEo"}'
-      handle-as="json"
-      last-response={{response}}></iron-ajax> -->
-    <!-- Uploaded Photos -->
     <iron-ajax
       auto
-      url="https://graph.facebook.com/v2.8/{{pageId}}/photos"
-      params='{"access_token":"103880376768441|ROA48OtPc62AuB3j-1NbqZwrKEo", "fields":"source", "type":"uploaded"}'
+      url="https://graph.facebook.com/v2.8/{{pageId}}/feed"
+      params='{"access_token":"103880376768441|ROA48OtPc62AuB3j-1NbqZwrKEo", "fields":"message,name,picture,link"}'
       handle-as="json"
       last-response={{response}}></iron-ajax>
-
     <!-- DOM Repeat -->
     <template is="dom-repeat" items={{response.data}}>
       <div>
-        {{item.message}}
-        <img style="min-width: 10vw; max-height: 10vw;" src="{{item.source}}">
+        <paper-card heading="{{item.name}}">
+          <div class="card-content">
+            <img src="{{item.picture}}">
+            <span class="message">{{item.message}}</span>
+            <a href="{{item.link}}">see more...</a>
+          </div>
+        </paper-card>
         </p>
       </div>
     </template>
