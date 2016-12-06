@@ -7,7 +7,7 @@
 `facebook-widget`
 A facebook widget for the Venice Dashboard
 
-@demo demo/index.html 
+@demo demo/index.html
 -->
 
 <dom-module id="facebook-widget">
@@ -24,9 +24,19 @@ A facebook widget for the Venice Dashboard
         min-width: 96px;
         width: 10vw;
         min-height: 96px;
-        max-height: 10vw; 
-        float: left; 
-        padding: 1vw;
+        max-height: 10vw;
+        float: left;
+        padding: 4px;
+      }
+      paper-card{
+        min-width: 100%;
+        --paper-card-header-text: {
+          padding: 4px;
+        };
+        --paper-card-content: {
+          padding: 0px;
+          font-size: 120%;
+        };
       }
       .message {
         display: block;
@@ -38,15 +48,16 @@ A facebook widget for the Venice Dashboard
     <!-- Iron Ajax call to Facebook Graph API -->
     <iron-ajax
       auto
-      url="https://graph.facebook.com/v2.8/{{pageid}}/feed"
+      url="https://graph.facebook.com/v2.8/feed/"
       params='{
+        "ids":"180008328709897,585431778198966,136375443095796,326915374138990,40209203564",
         "access_token":"103880376768441|ROA48OtPc62AuB3j-1NbqZwrKEo",
         "fields":"message,name,picture,link"}'
       handle-as="json"
       last-response={{response}}></iron-ajax>
     <!-- DOM Repeat -->
     <div class="clipped-content">
-      <template is="dom-repeat" items={{response.data}}>
+      <template is="dom-repeat" items={{_mergeIds(response)}}>
         <div>
           <paper-card heading="{{item.name}}">
             <div class="card-content">
@@ -64,11 +75,16 @@ A facebook widget for the Venice Dashboard
   <script>
     Polymer({
       is: 'facebook-widget',
-      properties: {
-        pageid: {
-          type: Number,
-          value: 585431778198966
+      _mergeIds: function(res){
+        var mergedData = [];
+        keys = Object.keys(res);
+        for (var i = 0; i < keys.length; i++) {
+          var data = res[keys[i]].data;
+          for (var j = 0; j < data.length; j++) {
+            mergedData.push(data[j]);
+          }
         }
+        return mergedData;
       }
     });
   </script>
